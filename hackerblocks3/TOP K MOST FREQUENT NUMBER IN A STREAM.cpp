@@ -1,0 +1,81 @@
+/*
+Given an array of n numbers.
+Your task is to read numbers from the array and keep at-most K numbers at the top
+(according to their decreasing frequency) every time a new number is read.
+We basically need to print top k numbers sorted by frequency when input stream has
+included k distinct elements, else need to print all distinct elements sorted by frequency.
+If frequency of two numbers are same then print them in increasing order.
+
+Input Format:
+First line contains integer t as number of test cases.
+Each test case contains following input.
+First line contains integer n which represents the length of the array and next
+line contains n space separated integers.
+
+Constraints:
+1 < t < 100
+1< n < 100000
+
+Output Format:
+Print top k running stream.
+
+Sample Input:
+1
+5 2
+5 1 3 5 2
+Sample Output:
+5 1 5 1 3 5 1 5 1
+*/
+#include<iostream>
+#include<vector>
+#include<unordered_map>
+#include<algorithm>
+using namespace std;
+void top_k(int*a,int n,int k)
+{
+    vector<int> top(k+1);
+    unordered_map<int,int>freq;
+    for(int m=0;m<n;m++)
+    {
+        freq[a[m]]++;
+        top[k]=a[m];
+        auto it=find(top.begin(),top.end()-1,a[m]);
+        for(int i=distance(top.begin(),it)-1;i>=0;i--)
+        {
+            if(freq[top[i]]<freq[top[i+1]])
+            {
+                swap(top[i],top[i+1]);
+            }
+            else if(freq[top[i]]==freq[top[i+1]] && top[i]>top[i+1])
+            {
+                swap(top[i],top[i+1]);
+            }
+            else
+            {
+                break;
+            }
+        }
+        for(int i=0;i<k && top[i]!=0;i++)
+        {
+            cout<<top[i]<<" ";
+        }
+    }
+}
+int main()
+{
+    int T;
+    cin>>T;
+    for(int t=0;t<T;t++)
+    {
+        int n,k;
+        int a[100000];
+        cin>>n>>k;
+        for(int i=0;i<n;i++)
+        {
+            cin>>a[i];
+        }
+        top_k(a,n,k);
+        cout<<endl;
+    }
+	return 0;
+}
